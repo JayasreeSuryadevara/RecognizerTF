@@ -14,6 +14,8 @@ async function app() {
 
   // Create an object from Tensorflow.js data API which could capture image 
   const context = canvas.getContext('2d');
+
+  // listen to file drop onto the canvas
   canvas.addEventListener('drop', (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -26,9 +28,12 @@ async function app() {
     e.dataTransfer.dropEffect = 'copy';
   });
 
+  // check if the file is an image file
   const drawImage = (fileList) => {
     let file = null;
     let imageURL = null;
+    // to handle more than one ffile dropped onto the canvas
+    // grab the first image file
     for (let i = 0; i < fileList.length; i++) {
       if (fileList[i].type.match(/^image\//)) {
         file = fileList[i];
@@ -41,11 +46,11 @@ async function app() {
     loadAndDrawImage(imageURL)
   }
 
+  // Draw the image onto the canvas context
   const loadAndDrawImage = (imageURL) => {
     let image = new Image();
     image.onload = function () {
       // To adjust image aspect ratio to browser
-      // debugger;
       let min = Math.min(image.width, image.height);
 
       let startX = (image.width - min) / 2;
@@ -57,15 +62,14 @@ async function app() {
     image.src = imageURL;
     addExample();
   }
-  // Reads an image from the webcam and associates it with a specific class
-  // index.
+  // Reads an image from the webcam and associates it with a specific class index.
   const addExample = () => {
     ObjCount++;
     const name = document.getElementById("image-name").value;
     ObservedObj[ObjCount] = name;
   
     let image = tf.browser.fromPixels(canvas);
-    // Get the intermediate activation of MobileNet 'conv_preds' and pass that
+    // Get the intermediate activation of MobileNet predictions and pass that
     // to the KNN classifier.
     const activation = net.infer(image, true);
 
