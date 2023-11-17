@@ -12,7 +12,7 @@ async function app() {
   // Load the model.
   net = await mobilenet.load();
 
-  // Create an object from Tensorflow.js data API which could capture image 
+  // Create an object from Tensorflow.js data API which could capture image
   const context = canvas.getContext('2d');
 
   // listen to file drop onto the canvas
@@ -57,7 +57,7 @@ async function app() {
       let startY = (image.height - min) / 2;
 
       context.drawImage(image, startX, startY, min, min, 0, 0, SIZE, SIZE);
-      // context.drawImage(image, 0,0)     
+      // context.drawImage(image, 0,0)
     }
     image.src = imageURL;
     addExample();
@@ -67,7 +67,7 @@ async function app() {
     ObjCount++;
     const name = document.getElementById("image-name").value;
     ObservedObj[ObjCount] = name;
-  
+
     let image = tf.browser.fromPixels(canvas);
     // Get the intermediate activation of MobileNet predictions and pass that
     // to the KNN classifier.
@@ -75,11 +75,11 @@ async function app() {
 
     // Pass the intermediate activation to the classifier.
     classifier.addExample(activation, ObjCount);
-    // document.getElementById("learned-list").innerHTML = `
-    //   ${ObservedObj.map((model,i) => {
-    //     return <li key={i}> {model.label} </li>
-    //   })}
-    //   `;
+    document.getElementById("learned-list").innerHTML = `
+      ${ObservedObj.map((model,i) => {
+        return <li key={i}> {model.label} </li>
+      })}
+      `;
 
     // Dispose the tensor to release the memory.
     image.dispose();
